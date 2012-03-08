@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="mica" default="build">
+
+
+
+	<target name="build" depends="compile">
+		<mkdir dir="dist" />
+		<jar destfile="dist/mica.jar">
+			<manifest>
+				<attribute name="Build-Host" value="${host.name}" />
+				<attribute name="Build-Number" value="${build.number}" />
+				<attribute name="Build-Timestamp" value="${build.timestamp}" />
+				<attribute name="Build-User" value="${user.name}" />
+				<attribute name="Build-Version" value="${build.version}" />
+			</manifest>
+			<fileset dir="bin" includes="**/*.class" />
+			<zipfileset src="lib/functionaljava.jar" includes="**/*.class"/>
+		</jar>
+	</target>
+
+
+
+	<target depends="initialize" name="clean">
+		<delete dir="bin" />
+		<delete dir="dist" />
+	</target>
+
+
+
+	<target name="compile" depends="clean">
+		<mkdir dir="bin" />
+		<javac destdir="bin" debug="on" includeantruntime="false">
+			<src path="src" />
+			<classpath>
+				<pathelement location="lib/asm3-all-3.3.2.jar" />
+				<pathelement location="lib/functionaljava.jar" />
+				<pathelement location="lib/jcommander-1.24-SNAPSHOT.jar" />
+				<pathelement location="lib/jgrapht0.8.jar" />
+				<pathelement location="lib/junit-4.10.jar" />
+			</classpath>
+		</javac>
+	</target>
+
+
+
+	<target name="initialize">
+	</target>
+</project>
