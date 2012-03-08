@@ -152,7 +152,7 @@ AcceptConnectionHandler {
 			try {
 				if (lock.tryLock(LOCK_WAIT_MS, TimeUnit.MILLISECONDS)) {
 					partner = compile(getProtocolInstance()).select(this,
-							pinstance, rng.nextDouble());
+							getProtocolInstance(), rng.nextDouble());
 
 					Runtime.debug.printf("%s select %s\n", this, partner);
 
