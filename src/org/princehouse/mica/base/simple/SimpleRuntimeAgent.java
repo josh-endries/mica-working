@@ -1,5 +1,6 @@
 package org.princehouse.mica.base.simple;
 
+import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -170,6 +171,14 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 		try {
 			try {
 				ois = new ObjectInputStream(connection.getInputStream());
+			} catch (EOFException e) {
+				/*
+				 * This happens often on Windows...ignore it.
+				 * 
+				 * TODO: This may be a bad thing to ignore. Look into the cause and
+				 * work around or fix it.
+				 */
+				return;
 			} catch (SocketException e) {
 				((BaseProtocol) pinstance)
 						.log("gossip-init-connection-failure");
