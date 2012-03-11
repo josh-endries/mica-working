@@ -97,8 +97,7 @@ AcceptConnectionHandler {
 			} else {
 				// failed to acquire lock; timeout
 				//((BaseProtocol)pinstance).log("accept-lock-fail");
-				System.err
-				.printf("%s accept: failed to acquire lock (timeout)", this);
+				System.err.printf("%s accept: failed to acquire lock with (timeout)\n", this);
 				connection.close();
 			}
 		} catch (InterruptedException e) {
@@ -165,8 +164,7 @@ AcceptConnectionHandler {
 
 
 					connection = partner.openConnection();
-					if (!running)
-						break;
+					if (!running) break;
 					compile(getProtocolInstance()).gossip(this, getProtocolInstance(),
 							connection);
 					lock.unlock();
@@ -178,6 +176,7 @@ AcceptConnectionHandler {
 					((BaseProtocol) getProtocolInstance()).log("lockfail-active");
 				}
 			} catch (IOException e) {
+				lock.unlock();
 				e.printStackTrace();
 			}
 			lastElapsedMS = getTimeMS() - startTime;
