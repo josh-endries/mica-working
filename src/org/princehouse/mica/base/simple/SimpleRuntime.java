@@ -162,11 +162,15 @@ AcceptConnectionHandler {
 						continue;
 					}
 
+					getProtocolInstance().preUpdate();
 
 					connection = partner.openConnection();
 					if (!running) break;
 					compile(getProtocolInstance()).gossip(this, getProtocolInstance(),
 							connection);
+					
+					getProtocolInstance().postUpdate();
+					
 					lock.unlock();
 				} else {
 					// failed to acquire lock within time limit; gossip again

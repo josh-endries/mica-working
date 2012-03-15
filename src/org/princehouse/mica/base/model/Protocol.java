@@ -48,4 +48,7 @@ public interface Protocol {
 	public static enum Direction {
 		PUSH, PULL, PUSHPULL
 	};
+	
+	public void preUpdate();
+	public void postUpdate();
 }
