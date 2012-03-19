@@ -162,14 +162,13 @@ AcceptConnectionHandler {
 						continue;
 					}
 
-					getProtocolInstance().preUpdate();
+					if (!running) {
+						lock.unlock();
+						break;
+					}
 
 					connection = partner.openConnection();
-					if (!running) break;
-					compile(getProtocolInstance()).gossip(this, getProtocolInstance(),
-							connection);
-					
-					getProtocolInstance().postUpdate();
+					compile(getProtocolInstance()).gossip(this, getProtocolInstance(), connection);
 					
 					lock.unlock();
 				} else {

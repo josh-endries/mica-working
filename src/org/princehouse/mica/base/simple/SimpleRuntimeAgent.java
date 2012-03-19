@@ -156,12 +156,13 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 		// 1. serialize local state, send over connection
 		// 2. receive updated state
 		// prerequisite of this agent: protocols implement serializable
-		RequestMessage<P> msg = new RequestMessage<P>(pinstance,
-				rt.getRuntimeState());
-
+		RequestMessage<P> msg = new RequestMessage<P>(pinstance, rt.getRuntimeState());
+		
+//		System.out.println("Running preUpdate on: "+pinstance);
+		pinstance.preUpdate();
 		try {
-			ObjectOutputStream oos = new ObjectOutputStream(
-					connection.getOutputStream());
+			ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
+//			System.out.println("Sending: "+pinstance);
 			oos.writeObject(msg);
 		} catch (IOException e) {
 			rt.punt(e);
@@ -187,6 +188,10 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 			try {
 				@SuppressWarnings("unchecked")
 				ResponseMessage<P> rpm = (ResponseMessage<P>) ois.readObject();
+				
+//				System.out.println("Received back: "+rpm.protocolInstance);
+//				System.out.println("Running postUpdate on: "+rpm.protocolInstance);
+				rpm.protocolInstance.postUpdate();
 
 				rt.setProtocolInstance(rpm.protocolInstance);
 
@@ -392,9 +397,7 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 	 * @throws IOException
 	 */
 	@SuppressWarnings("unchecked")
-	public void acceptConnection(Runtime<?> runtime, P pinstance,
-			Connection connection) throws IOException {
-
+	public void acceptConnection(Runtime<?> runtime, P pinstance, Connection connection) throws IOException {
 		MarkingObjectInputStream ois = null; // can distinguish deserialized
 		// objects from others
 
@@ -407,6 +410,8 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 		try {
 			RequestMessage<P> rqm = (RequestMessage<P>) ois.readObject();
 			P p1 = rqm.protocolInstance;
+//			System.out.println("Received: "+p1);
+//			System.out.println("Have: "+pinstance);
 
 			// foreign state is used by the visiting node to access remote
 			// runtime state data
@@ -426,6 +431,7 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 					connection.getOutputStream());
 			ResponseMessage<P> rpm = new ResponseMessage<P>(p1,
 					rqm.runtimeState);
+//			System.out.println("Sending back: "+p1);
 			oos.writeObject(rpm);
 			oos.close();
 
@@ -448,8 +454,11 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 			/*
 			 * Added by Josh, pre and postUpdate for precv (the local instance).
 			 */
+//			System.out.println("Calling preUpdate on: "+precv);
 			precv.preUpdate();
+//			System.out.println("Calling update on: "+pinit);
 			updateMethod.invoke(pinit, precv);
+//			System.out.println("Calling postUpdate on: "+precv);
 			precv.postUpdate();
 		} catch (IllegalArgumentException e) {
 			runtime.fatal(e);
