@@ -445,7 +445,12 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 	private void runGossipUpdate(Runtime<?> runtime, P pinit, P precv) {
 		// imperative update of p1 and p2 states
 		try {
+			/*
+			 * Added by Josh, pre and postUpdate for precv (the local instance).
+			 */
+			precv.preUpdate();
 			updateMethod.invoke(pinit, precv);
+			precv.postUpdate();
 		} catch (IllegalArgumentException e) {
 			runtime.fatal(e);
 		} catch (IllegalAccessException e) {
