@@ -73,6 +73,20 @@ public class TCPAddress implements Address, Externalizable {
 		this.address = address;
 		this.port = port;
 	}
+
+	/**
+	 * A copy constructor that create a deep copy of the given address.
+	 * 
+	 * @param a The address to copy.
+	 */
+	public TCPAddress(TCPAddress a) {
+		try {
+			this.address = InetAddress.getByName(a.getInetAddressAddress().getHostAddress());
+			this.port = a.getPort();
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
 	
 	@Override
 	public void bind(AcceptConnectionHandler h) {
