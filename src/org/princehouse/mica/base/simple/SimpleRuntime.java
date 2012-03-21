@@ -168,8 +168,15 @@ AcceptConnectionHandler {
 					}
 
 					connection = partner.openConnection();
+
+					System.out.println("Running preUpdate on: "+getProtocolInstance());
+					getProtocolInstance().preUpdate();
+
 					compile(getProtocolInstance()).gossip(this, getProtocolInstance(), connection);
-					
+
+					System.out.println("Running postUpdate on: "+getProtocolInstance());
+					getProtocolInstance().postUpdate();
+
 					lock.unlock();
 				} else {
 					// failed to acquire lock within time limit; gossip again

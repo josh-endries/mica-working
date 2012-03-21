@@ -158,11 +158,9 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 		// prerequisite of this agent: protocols implement serializable
 		RequestMessage<P> msg = new RequestMessage<P>(pinstance, rt.getRuntimeState());
 		
-//		System.out.println("Running preUpdate on: "+pinstance);
-		pinstance.preUpdate();
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
-//			System.out.println("Sending: "+pinstance);
+			System.out.println("Sending: "+pinstance);
 			oos.writeObject(msg);
 		} catch (IOException e) {
 			rt.punt(e);
@@ -189,9 +187,7 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 				@SuppressWarnings("unchecked")
 				ResponseMessage<P> rpm = (ResponseMessage<P>) ois.readObject();
 				
-//				System.out.println("Received back: "+rpm.protocolInstance);
-//				System.out.println("Running postUpdate on: "+rpm.protocolInstance);
-				rpm.protocolInstance.postUpdate();
+				System.out.println("Received back: "+rpm.protocolInstance);
 
 				rt.setProtocolInstance(rpm.protocolInstance);
 
