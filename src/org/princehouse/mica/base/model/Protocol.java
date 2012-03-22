@@ -49,6 +49,42 @@ public interface Protocol {
 		PUSH, PULL, PUSHPULL
 	};
 	
-	public void preUpdate();
-	public void postUpdate();
+
+	/**
+	 * preUpdate is called on the local protocol instance after receiving an
+	 * incoming instance but just before calling update on that incoming
+	 * instance.
+	 * 
+	 * @author Josh Endries (jce54@cornell.edu)
+	 * @param other The protocol instance on which update will be called.
+	 */
+	public void preUpdate(final Protocol other);
+	
+	/**
+	 * postUpdate is called on the local protocol instance after receiving an
+	 * incoming instance but just before calling update on that incoming
+	 * instance.
+	 * 
+	 * @author Josh Endries (jce54@cornell.edu)
+	 * @param other The protocol instance on which update will be called.
+	 */
+	public void postUpdate(final Protocol other);
+	
+	/**
+	 * preGossip is called just before this protocol instance is sent over the
+	 * network.
+	 * 
+	 * @author Josh Endries (jce54@cornell.edu)
+	 * @param other The address to which this protocol instance will be sent.
+	 */
+	public void preGossip(final Address other);
+	
+	/**
+	 * postGossip is called just after this protocol instance is received back
+	 * from being sent over the network and updated.
+	 * 
+	 * @author Josh Endries (jce54@cornell.edu)
+	 * @param other The address to which this protocol instance was sent.
+	 */
+	public void postGossip(final Address other);
 }

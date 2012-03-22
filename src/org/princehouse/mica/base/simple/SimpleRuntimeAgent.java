@@ -160,7 +160,7 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 		
 		try {
 			ObjectOutputStream oos = new ObjectOutputStream(connection.getOutputStream());
-			System.out.println("Sending: "+pinstance);
+//			System.out.println("Sending: "+pinstance);
 			oos.writeObject(msg);
 		} catch (IOException e) {
 			rt.punt(e);
@@ -187,7 +187,7 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 				@SuppressWarnings("unchecked")
 				ResponseMessage<P> rpm = (ResponseMessage<P>) ois.readObject();
 				
-				System.out.println("Received back: "+rpm.protocolInstance);
+//				System.out.println("Received back: "+rpm.protocolInstance);
 
 				rt.setProtocolInstance(rpm.protocolInstance);
 
@@ -451,11 +451,11 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 			 * Added by Josh, pre and postUpdate for precv (the local instance).
 			 */
 //			System.out.println("Calling preUpdate on: "+precv);
-			precv.preUpdate();
+			precv.preUpdate(pinit);
 //			System.out.println("Calling update on: "+pinit);
 			updateMethod.invoke(pinit, precv);
 //			System.out.println("Calling postUpdate on: "+precv);
-			precv.postUpdate();
+			precv.postUpdate(pinit);
 		} catch (IllegalArgumentException e) {
 			runtime.fatal(e);
 		} catch (IllegalAccessException e) {

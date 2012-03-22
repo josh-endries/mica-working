@@ -2,6 +2,7 @@ package org.princehouse.mica.base.net.model;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.net.InetAddress;
 
 /**
  * Interface representing the general concept of an Address.
@@ -37,4 +38,5 @@ public interface Address extends Serializable, Comparable<Address> {
 	
 	public String toString();
 
+	public InetAddress getInetAddressAddress();
 }

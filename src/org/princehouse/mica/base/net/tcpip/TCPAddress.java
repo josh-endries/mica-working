@@ -75,8 +75,9 @@ public class TCPAddress implements Address, Externalizable {
 	}
 
 	/**
-	 * A copy constructor that create a deep copy of the given address.
-	 * 
+	 * A copy constructor that create a deep copy of the given address. Added
+	 *
+	 * @author Josh Endries (jce54@cornell.edu)
 	 * @param a The address to copy.
 	 */
 	public TCPAddress(TCPAddress a) {

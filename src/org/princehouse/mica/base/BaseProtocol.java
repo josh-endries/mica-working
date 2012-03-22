@@ -136,8 +136,14 @@ public abstract class BaseProtocol implements Protocol, Serializable {
 	}
 	
 	@Override
-	public void preUpdate() {}
+	public void preUpdate(final Protocol other) {}
 	
 	@Override
-	public void postUpdate() {}
+	public void postUpdate(final Protocol other) {}
+	
+	@Override
+	public void preGossip(final Address other) {}
+	
+	@Override
+	public void postGossip(final Address other) {}
 }

@@ -169,13 +169,13 @@ AcceptConnectionHandler {
 
 					connection = partner.openConnection();
 
-					System.out.println("Running preUpdate on: "+getProtocolInstance());
-					getProtocolInstance().preUpdate();
+//					System.out.println("Running preGossip on: "+getProtocolInstance());
+					getProtocolInstance().preGossip(partner);
 
 					compile(getProtocolInstance()).gossip(this, getProtocolInstance(), connection);
 
-					System.out.println("Running postUpdate on: "+getProtocolInstance());
-					getProtocolInstance().postUpdate();
+//					System.out.println("Running postGossip on: "+getProtocolInstance());
+					getProtocolInstance().postGossip(partner);
 
 					lock.unlock();
 				} else {
