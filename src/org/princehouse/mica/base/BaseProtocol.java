@@ -4,6 +4,7 @@ package org.princehouse.mica.base;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.Serializable;
+import java.net.InetAddress;
 
 import org.princehouse.mica.base.annotations.GossipRate;
 import org.princehouse.mica.base.model.Protocol;
@@ -20,6 +21,7 @@ import org.princehouse.mica.util.MarkingObjectInputStream;
  *
  */
 public abstract class BaseProtocol implements Protocol, Serializable {
+	private InetAddress origin = null;
 
 	/**
 	 * 
@@ -47,6 +49,11 @@ public abstract class BaseProtocol implements Protocol, Serializable {
 	@Override
 	public String toString() {
 		return String.format("[%s@%s]", getName(), getRuntimeState().getAddress());  
+	}
+	
+	@Override
+	public InetAddress getOrigin() {
+		return origin;
 	}
 	
 	@Override
@@ -92,6 +99,10 @@ public abstract class BaseProtocol implements Protocol, Serializable {
 	public Protocol setName(String name) {
 		this.name = name;
 		return this;
+	}
+	
+	protected void setOrigin(InetAddress o) {
+		origin = o;
 	}
 	
 	// TODO "local_timestamp":  Is that in ms or rounds?
@@ -142,7 +153,9 @@ public abstract class BaseProtocol implements Protocol, Serializable {
 	public void postUpdate(final Protocol other) {}
 	
 	@Override
-	public void preGossip(final Address other) {}
+	public void preGossip(final Address other) {
+		setOrigin(getAddress().getInetAddressAddress());
+	}
 	
 	@Override
 	public void postGossip(final Address other) {}

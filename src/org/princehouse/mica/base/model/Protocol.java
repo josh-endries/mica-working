@@ -1,5 +1,7 @@
 package org.princehouse.mica.base.model;
 
+import java.net.InetAddress;
+
 import org.princehouse.mica.base.net.model.Address;
 import org.princehouse.mica.util.Distribution;
 
@@ -11,7 +13,37 @@ import org.princehouse.mica.util.Distribution;
  *
  */
 public interface Protocol {
+	/** 
+	 * Not currently used
+	 * 
+	 * @author lonnie
+	 *
+	 */
+	public static enum Direction {
+		PUSH, PULL, PUSHPULL
+	}
 	
+	/**
+	 * Execute the update function of this protocol on another local protocol instance
+	 * @param other
+	 */
+	public void executeUpdate(Protocol other);
+	
+	/**
+	 * Execute the rate function for this Protocol instance.
+	 * 
+	 * @return
+	 */
+	public double getFrequency();
+	
+	/**
+	 * Retrieve the origin of this protocol instance.
+	 * 
+	 * @author Josh Endries (jce54@cornell.edu)
+	 * @return The origin address of this protocol instance.
+	 */
+	public InetAddress getOrigin();
+
 	/**
 	 * RuntimeState is location-specific state that is independent of the protocol instance.
 	 * This includes the runtime clock and random number generator.
@@ -24,41 +56,16 @@ public interface Protocol {
 	 * Execute the select function for this Protocol instance and return its address distribution.
 	 * @return Address distribution
 	 */
-	public Distribution<Address> getSelectDistribution();
+	public Distribution<Address> getSelectDistribution();;
 	
 	/**
-	 * Execute the rate function for this Protocol instance.
-	 * 
-	 * @return
-	 */
-	public double getFrequency();
-
-	/**
-	 * Execute the update function of this protocol on another local protocol instance
-	 * @param other
-	 */
-	public void executeUpdate(Protocol other);
-	
-	/** 
-	 * Not currently used
-	 * 
-	 * @author lonnie
-	 *
-	 */
-	public static enum Direction {
-		PUSH, PULL, PUSHPULL
-	};
-	
-
-	/**
-	 * preUpdate is called on the local protocol instance after receiving an
-	 * incoming instance but just before calling update on that incoming
-	 * instance.
+	 * postGossip is called just after this protocol instance is received back
+	 * from being sent over the network and updated.
 	 * 
 	 * @author Josh Endries (jce54@cornell.edu)
-	 * @param other The protocol instance on which update will be called.
+	 * @param other The address to which this protocol instance was sent.
 	 */
-	public void preUpdate(final Protocol other);
+	public void postGossip(final Address other);
 	
 	/**
 	 * postUpdate is called on the local protocol instance after receiving an
@@ -80,11 +87,12 @@ public interface Protocol {
 	public void preGossip(final Address other);
 	
 	/**
-	 * postGossip is called just after this protocol instance is received back
-	 * from being sent over the network and updated.
+	 * preUpdate is called on the local protocol instance after receiving an
+	 * incoming instance but just before calling update on that incoming
+	 * instance.
 	 * 
 	 * @author Josh Endries (jce54@cornell.edu)
-	 * @param other The address to which this protocol instance was sent.
+	 * @param other The protocol instance on which update will be called.
 	 */
-	public void postGossip(final Address other);
+	public void preUpdate(final Protocol other);
 }
