@@ -101,7 +101,7 @@ public abstract class BaseProtocol implements Protocol, Serializable {
 		return this;
 	}
 	
-	protected void setOrigin(InetAddress o) {
+	public void setOrigin(InetAddress o) {
 		origin = o;
 	}
 	

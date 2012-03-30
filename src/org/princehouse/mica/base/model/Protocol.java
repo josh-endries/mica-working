@@ -95,4 +95,6 @@ public interface Protocol {
 	 * @param other The protocol instance on which update will be called.
 	 */
 	public void preUpdate(final Protocol other);
+	
+	public void setOrigin(InetAddress origin);
 }
