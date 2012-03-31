@@ -95,4 +95,12 @@ public interface Protocol {
 	 * @param other The protocol instance on which update will be called.
 	 */
 	public void preUpdate(final Protocol other);
+	
+	/**
+	 * Set the origin address for this protocol instance.
+	 * 
+	 * @author Josh Endries (jce54@cornell.edu)
+	 * @param address The origin address.
+	 */
+	public void setOrigin(InetAddress address);
 }
