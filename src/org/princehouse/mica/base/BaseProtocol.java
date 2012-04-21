@@ -136,6 +136,9 @@ public abstract class BaseProtocol implements Protocol, Serializable {
 		return "-";
 	}
 	
+	@Override
+	public void initialize() {}
+	
 	/**
 	 * The default rate of all protocols is 1.0.
 	 * Override this only if you specifically want to make this protocol gossip at a 

@@ -130,6 +130,8 @@ AcceptConnectionHandler {
 		Random rng = new Random(randomSeed);
 
 		((BaseProtocol) pinstance).logstate();
+		
+		pinstance.initialize();
 
 		while (running) {
 			double rate = getRate(getProtocolInstance());

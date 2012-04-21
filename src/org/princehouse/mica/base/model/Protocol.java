@@ -56,7 +56,14 @@ public interface Protocol {
 	 * Execute the select function for this Protocol instance and return its address distribution.
 	 * @return Address distribution
 	 */
-	public Distribution<Address> getSelectDistribution();;
+	public Distribution<Address> getSelectDistribution();
+	
+	/**
+	 * Called just before beginning the select/update event loop.
+	 * 
+	 * @author Josh Endries (jce54@cornell.edu)
+	 */
+	public void initialize();
 	
 	/**
 	 * postGossip is called just after this protocol instance is received back
