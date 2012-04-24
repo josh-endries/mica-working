@@ -31,7 +31,7 @@ AcceptConnectionHandler {
 
 	private ReentrantLock lock = new ReentrantLock();
 
-	public static int DEFAULT_INTERVAL = 2000;
+	public static int DEFAULT_INTERVAL = 1000;
 	private static long LOCK_WAIT_MS = DEFAULT_INTERVAL;
 
 	public static long DEFAULT_RANDOM_SEED = 0L;
