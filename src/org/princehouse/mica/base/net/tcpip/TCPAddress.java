@@ -30,38 +30,38 @@ public class TCPAddress implements Address, Externalizable {
 	 */
 	public static final int DEFAULT_PORT = 8000; 
 	
-	private AcceptConnectionHandler receiveCallback;
+	/** 
+	 * Convert a "host:port" string into a TCPIPAddress instance
+	 * 
+	 * @param addr
+	 * @return
+	 * @throws UnknownHostException
+	 */
+	public static TCPAddress valueOf(String addr) throws UnknownHostException {
+		// TODO Auto-generated method stub
+		int port;
+		String host;
+		
+		if(addr.indexOf(':') >= 0) {			
+			port = Integer.valueOf(addr.substring(addr.indexOf(':')+1)); 
+			host = addr.substring(0,addr.indexOf(':'));
+		} else {
+			port = DEFAULT_PORT;
+			host = addr;
+		}
+		return new TCPAddress(InetAddress.getByName(host), port);
+	}
 	
+	private AcceptConnectionHandler receiveCallback;
 	protected InetAddress address;
 	protected ServerSocket sock;
+	
 	int port;
 	
-	@Override
-	public boolean equals(Object o) {
-		if(!(o instanceof TCPAddress)) {
-			return false;
-		} else { 
-			TCPAddress t = (TCPAddress) o;
-			return address.equals(t.address) && port == t.port;
-		}
-		
-	}
-	
 	/**
-	 * Return the port associated with the address
-	 * @return
+	 * Default constructor
 	 */
-	public int getPort() {
-		return port;
-	}
-	
-	/**
-	 * Get the IP address as a Java InetAddress
-	 * @return An InetAddress that can be used with Java's built-in networking
-	 */
-	public InetAddress getInetAddressAddress() {
-		return address;
-	}
+	public TCPAddress() {}
 	
 	/**
 	 * Constructor from IP address and port number
@@ -73,7 +73,7 @@ public class TCPAddress implements Address, Externalizable {
 		this.address = address;
 		this.port = port;
 	}
-
+	
 	/**
 	 * A copy constructor that create a deep copy of the given address. Added
 	 *
@@ -85,6 +85,19 @@ public class TCPAddress implements Address, Externalizable {
 			this.address = InetAddress.getByName(a.getInetAddressAddress().getHostAddress());
 			this.port = a.getPort();
 		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void acceptCallback(Socket clientSocket) {
+		// clientSocket is returned from ServerSocket.accept
+		assert(receiveCallback != null);
+		
+		try {
+			Connection c = new SocketConnection(clientSocket);
+			receiveCallback.acceptConnection(this,c);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
@@ -108,50 +121,42 @@ public class TCPAddress implements Address, Externalizable {
 	}
 
 	@Override
-	public void unbind() {
-		// TODO not implemented
+	public int compareTo(Address o) {
+		return toString().compareTo(o.toString());
 	}
 	
 	@Override
-	public String toString() {
-		return String.format("%s:%d",address,port);
+	public boolean equals(Object o) {
+		if(!(o instanceof TCPAddress)) {
+			return false;
+		} else { 
+			TCPAddress t = (TCPAddress) o;
+			return address.equals(t.address) && port == t.port;
+		}
+		
 	}
 	
-	/** 
-	 * Convert a "host:port" string into a TCPIPAddress instance
-	 * 
-	 * @param addr
-	 * @return
-	 * @throws UnknownHostException
+	/**
+	 * Get the IP address as a Java InetAddress
+	 * @return An InetAddress that can be used with Java's built-in networking
 	 */
-	public static TCPAddress valueOf(String addr) throws UnknownHostException {
-		// TODO Auto-generated method stub
-		int port;
-		String host;
-		
-		if(addr.indexOf(':') >= 0) {			
-			port = Integer.valueOf(addr.substring(addr.indexOf(':')+1)); 
-			host = addr.substring(0,addr.indexOf(':'));
-		} else {
-			port = DEFAULT_PORT;
-			host = addr;
-		}
-		return new TCPAddress(InetAddress.getByName(host), port);
+	public InetAddress getInetAddressAddress() {
+		return address;
 	}
 
-	protected void acceptCallback(Socket clientSocket) {
-		// clientSocket is returned from ServerSocket.accept
-		assert(receiveCallback != null);
-		
-		try {
-			Connection c = new SocketConnection(clientSocket);
-			receiveCallback.acceptConnection(this,c);
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	/**
+	 * Return the port associated with the address
+	 * @return
+	 */
+	public int getPort() {
+		return port;
 	}
 
+	@Override
+	public int hashCode() {
+		return toString().hashCode();
+	}
+	
 	@Override
 	public Connection openConnection() throws IOException {
 		// TODO Auto-generated method stub
@@ -167,24 +172,23 @@ public class TCPAddress implements Address, Externalizable {
 		port = (Integer) in.readObject();
 	}
 	
+	public void setPort(int p) {
+		port = p;
+	}
+
+	@Override
+	public String toString() {
+		return String.format("%s:%d",address,port);
+	}
+
+	@Override
+	public void unbind() {
+		// TODO not implemented
+	}
+	
 	@Override
 	public void writeExternal(ObjectOutput out) throws IOException {
 		out.writeObject(address);
 		out.writeObject((Integer)port);
-	}
-
-	/**
-	 * Default constructor
-	 */
-	public TCPAddress() {}
-
-	@Override
-	public int compareTo(Address o) {
-		return toString().compareTo(o.toString());
-	}
-	
-	@Override
-	public int hashCode() {
-		return toString().hashCode();
 	}
 }
