@@ -2,6 +2,7 @@ package org.princehouse.mica.base.simple;
 
 
 import java.io.IOException;
+import java.net.ConnectException;
 import java.util.Date;
 import java.util.Random;
 import java.util.concurrent.TimeUnit;
@@ -31,7 +32,7 @@ AcceptConnectionHandler {
 
 	private ReentrantLock lock = new ReentrantLock();
 
-	public static int DEFAULT_INTERVAL = 1000;
+	public static int DEFAULT_INTERVAL = 500;
 	private static long LOCK_WAIT_MS = DEFAULT_INTERVAL;
 
 	public static long DEFAULT_RANDOM_SEED = 0L;
@@ -187,6 +188,9 @@ AcceptConnectionHandler {
 							"%s active lock fail on init gossip [already engaged in gossip?]\n", this);
 					((BaseProtocol) getProtocolInstance()).log("lockfail-active");
 				}
+			} catch (ConnectException e) {
+				Runtime.debug.printf("%s unable to connect to %s\n", this, partner);
+				lock.unlock();
 			} catch (IOException e) {
 				lock.unlock();
 				e.printStackTrace();

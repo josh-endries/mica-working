@@ -163,7 +163,8 @@ class SimpleRuntimeAgent<P extends Protocol> extends RuntimeAgent<P> {
 //			System.out.println("Sending: "+pinstance);
 			oos.writeObject(msg);
 		} catch (IOException e) {
-			rt.punt(e);
+//			rt.punt(e);
+			return;
 		}
 
 		ObjectInputStream ois;
